@@ -42,15 +42,6 @@
   .cost { background: #fff7e6; border: 1px solid #ffd591; border-radius: 8px;
           padding: 14px 16px; font-size: 14px; }
   .cost b { color: #d46b08; font-size: 20px; }
-  .beg { margin-top: 14px; background: linear-gradient(135deg,#fff0f5,#fff7e6);
-         border: 2px dashed #ff9eb5; border-radius: 12px; padding: 20px; text-align: center; }
-  .beg-emoji { font-size: 40px; line-height: 1.2; }
-  .beg-title { font-size: 18px; font-weight: 700; color: #d6336c; margin: 8px 0; }
-  .beg-body { font-size: 14px; color: #555; line-height: 1.8; }
-  .beg-body b { color: #d46b08; }
-  .beg-ascii { display: block; margin-top: 6px; color: #e8590c; font-size: 15px; }
-  .beg-foot { margin-top: 12px; font-size: 13px; color: #888; }
-  .beg-foot a { color: #1a73e8; text-decoration: none; }
   .bar { height: 22px; background: #e8edf2; border-radius: 11px; overflow: hidden; }
   .bar > div { height: 100%; background: linear-gradient(90deg,#1a73e8,#38b2f4);
                width: 0; transition: width .3s; }
@@ -94,10 +85,10 @@
     </label>
     <div class="keybox">
       <label class="keylabel">
-        <input type="checkbox" id="useOwnKey"> 用自己的 Key（各付各的，不用给作者转钱）
+        <input type="checkbox" id="useOwnKey"> 用自己的 Key
       </label>
       <input type="password" id="ownKey" class="keyinput hide" placeholder="ark-... 你的 API Key（只在本次翻译用，不保存）" autocomplete="off">
-      <p class="muted" id="keyHint">默认用服务器的 Key（走作者额度，翻完会提示给作者转个辛苦费）。</p>
+      <p class="muted" id="keyHint">默认用作者的 Key。</p>
     </div>
   </div>
 
@@ -123,7 +114,6 @@
   <div class="card hide" id="resultCard">
     <h2><span class="step-num">4</span>完成 · 结算与下载</h2>
     <div class="cost" id="finalCost"></div>
-    <div class="beg hide" id="beg"></div>
     <div class="stats" id="finalStats" style="margin-top:14px"></div>
     <div style="margin-top:16px" class="row">
       <button id="downloadBtn">下载译文 .docx</button>
@@ -195,8 +185,8 @@ $('useOwnKey').addEventListener('change', e => {
   const on = e.target.checked;
   show('ownKey', on);
   $('keyHint').textContent = on
-    ? '已选择用你自己的 Key —— 费用走你自己的账户，不用给作者转钱。'
-    : '默认用服务器的 Key（走作者额度，翻完会提示给作者转个辛苦费）。';
+    ? '已选择用你自己的 Key —— 费用走你自己的账户。'
+    : '默认用作者的 Key。';
 });
 
 // ---- 开始翻译 ----
@@ -235,14 +225,9 @@ async function poll() {
 function renderResult() {
   show('resultCard', true);
   if (JOB.own_key) {
-    // 用户自带 key —— 各付各的,不乞讨
-    $('finalCost').innerHTML = `本次费用：<b>￥${JOB.cost}</b>（已走你自己的 Key，无需转账）。`;
-    show('beg', false);
+    $('finalCost').innerHTML = `本次翻译消耗了约 <b>￥${JOB.cost}</b> 的 tokens（走你自己的 Key）。`;
   } else {
-    // 走作者额度 —— 显示求转账
-    $('finalCost').innerHTML = `本次翻译花了丁善 <b>￥${JOB.cost}</b> 的 tokens。`;
-    $('beg').innerHTML = begHtml(JOB.cost);
-    show('beg', true);
+    $('finalCost').innerHTML = `本次翻译消耗了约 <b>￥${JOB.cost}</b> 的 tokens。`;
   }
   const resid = JOB.residual_zh;
   const residHtml = resid > 0
@@ -256,19 +241,6 @@ function renderResult() {
   $('resultCard').scrollIntoView({behavior:'smooth'});
 }
 
-// 求转账文案(无 emoji)
-function begHtml(cost) {
-  return `
-    <div class="beg-emoji">( T﹏T )</div>
-    <div class="beg-title">求求了，给丁善施舍一点点吧～</div>
-    <div class="beg-body">
-      这次翻译丁善（工号 <b>BGI40286</b>）的额度被你薅走了 <b>￥${cost}</b> 的 tokens。<br>
-      虽然不多，但积少成多，丁善的钱包已经在小声哭泣。<br>
-      <span class="beg-ascii">┌(￣ヘ￣┐)…(┌￣ヘ￣)┐ 给点辛苦费让我续杯咖啡</span>
-    </div>
-    <div class="beg-foot">扫码 / 转账随意打赏，多少都是爱 &nbsp;|&nbsp;
-      觉得好用就去 <a href="https://github.com/yoshnii/SOP-translation" target="_blank" rel="noopener">GitHub Star 一个</a> 也行！</div>`;
-}
 
 $('downloadBtn').addEventListener('click', () => { window.location = '/api/download/' + JOB.job_id; });
 

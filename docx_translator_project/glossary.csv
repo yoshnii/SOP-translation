@@ -33,7 +33,7 @@ DNB终止缓冲液,DNB Stop Buffer,
 # ====== 流程 / 步骤 ======
 血浆分离,Plasma Separation,
 提取,Extraction,,Exaction
-建库,Library Preparation,,database construction;Database Construction;database creation;build a database;building a database;Database Building;database building;Database product;Database table
+建库,Library Preparation,,database construction;Database Construction;database creation;build a database;building a database;Database Building;database building;Database product;Database table;Database library;database library;database workstation;Database workstation
 上机前准备,Pre-run Preparation,,getting on the plane;preparation before getting on the plane;pre-flight preparation;pre-flight;Pre-machine;before using the computer;uploading to the computer system
 环化反应,Circularization,
 末端修复,End Repair,
@@ -175,7 +175,7 @@ PCR胶垫,PCR gasket,[人工版] 耗材,PCR gel pads
 杂洗,Hybridization Wash,[QC],Mixed Washing;Mixed Wash
 人份,tests,[QC],servings
 建库产物,Library product,[QC],
-建库仓,Library Preparation chamber,[QC],
+建库仓,Library Preparation chamber,[QC],database workstation;Database Storage;database storage;database setup;Database setup;pretreatment database;Pre-processing Database
 Make DNB,DNB (DNA Nanoball) preparation,[QC],
 DNB,DNB (DNA Nanoball) preparation,[QC],
 联合探针锚定聚合测序法,cPAS,[QC],

@@ -45,3 +45,27 @@ DNB定量(标题),DNB Quantification
 图21 前处理建库试剂板位示意图,Figure 21: Schematic diagram of reagent plate positions for pre-processing library preparation
 图1 标曲板位示意图,Figure 1: Schematic of the standard curve plate layout
 图3 中台定标图示,Figure 3: Middleware calibration interface
+"# 建库仓相关(人工标准译文,锁死)",
+建库仓收集槽清洁操作,Cleaning of the Library Preparation Module Collection Trough
+附录3 建库仓收集槽清洁操作,Appendix 3 Cleaning of the Library Preparation Module Collection Trough
+附录3  建库仓收集槽清洁操作,Appendix 3 Cleaning of the Library Preparation Module Collection Trough
+2）建库仓试剂，耗材摆放,2) Placement of Reagents and Consumables in the Library Preparation Module
+2)建库仓试剂，耗材摆放,2) Placement of Reagents and Consumables in the Library Preparation Module
+图7  SIRO全流程建库仓位图,Figure 7 SIRO Full-Process Library Preparation Module Layout
+图10  SIRO前处理建库仓位图,Figure 10 SIRO Pre-processing Library Preparation Module Layout
+图11  SIRO上机前准备建库仓位图,Figure 11 SIRO Pre-loading Preparation Library Preparation Module Layout
+图8 建库仓试剂耗材位置摆放图示,Figure 8 Placement of Reagents and Consumables in the Library Preparation Module
+图9 建库仓Rack4和Rack8试剂耗材位置摆放图示,Figure 9 Placement of Reagents and Consumables in Rack 4 and Rack 8 of the Library Preparation Module
+图10 建库仓Rack4和Rack8试剂耗材位置摆放图示,Figure 10 Placement of Reagents and Consumables in Rack 4 and Rack 8 of the Library Preparation Module
+图10 建库仓Rack4和Rack8试剂耗材位置摆放图示（前处理建库试剂板位）,Figure 10 Placement of Reagents and Consumables in Rack 4 and Rack 8 of the Library Preparation Module (Pre-processing Library Preparation Reagent Plate Positions)
+图11建库仓Rack4和Rack8试剂耗材位置摆放图示（上机前准备试剂板位）,Figure 11 Placement of Reagents and Consumables in Rack 4 and Rack 8 of the Library Preparation Module (Pre-loading Preparation Reagent Plate Positions)
+按照下表将8人份和16人份建库试剂分装到对应的耗材中，不同装量试剂分装表参考附录6，将试剂放入建库仓以前，均需再次离心，确认管底没有气泡。,"Aliquot the 8-test and 16-test library preparation reagents into the corresponding consumables according to the table below; for aliquoting tables of different volumes, refer to Appendix 6. Before loading the reagents into the Library Preparation Module, centrifuge again to ensure there are no bubbles at the bottom of the tubes."
+按照图7的将建库仓需要的试剂耗材摆放到指定位置，去掉枪头盒盖子，将试剂管盖打开，注意在Rack11定量模块放完八连管后，需合上定量模块的盖子。在Rack 8放完试剂后，需将温控盖板盖回Rack 8。,"As shown in Figure 7, place the reagents and consumables required by the Library Preparation Module at the designated positions. Remove the tip box lids and open the reagent tube caps. Note: after placing the 8-tube strips in the Rack 11 quantification module, close the lid of the quantification module. After placing the reagents in Rack 8, replace the temperature-control cover plate back onto Rack 8."
+按照图10的将建库仓需要的试剂耗材摆放到指定位置，去掉枪头盒盖子，将试剂管盖打开，注意在Rack11定量模块放完八连管后，需合上定量模块的盖子。在Rack 8放完试剂后，需将温控盖板盖回Rack 8。,"As shown in Figure 10, place the reagents and consumables required by the Library Preparation Module at the designated positions. Remove the tip box lids and open the reagent tube caps. Note: after placing the 8-tube strips in the Rack 11 quantification module, close the lid of the quantification module. After placing the reagents in Rack 8, replace the temperature-control cover plate back onto Rack 8."
+7.根据选择的任务类型，弹出的建库仓台面依次确认各位置试剂耗材摆放正确，确认无误后点击“确认”；,"7. Based on the selected task type, verify on the pop-up Library Preparation Module deck that the reagents and consumables at each position are placed correctly; after confirming, click \Confirm\""."""
+6.8.2 前处理建库台面摆放,6.8.2 Pre-processing Library Preparation Deck Setup
+图19 全流程及前处理建库导入表填写示例,Figure 19 Example of Filling Out the Import Form for Full-Process and Pre-processing Library Preparation
+建库文库,Library
+上机前准备：输入建库板号作为当前任务编号,Pre-loading Preparation: Enter the library preparation plate number as the current task ID
+②上机前准备流程，需要另外填写建“建库板号”、“建库孔位”和“建库浓度”，其中建库板号可以任意填写，一个任务单只能填写一个板号；,"(2) For the pre-loading preparation workflow, you also need to fill in the \library preparation plate number\"""," \""library preparation well position\"""," and \""library preparation concentration\"". The library preparation plate number can be filled in arbitrarily"," and only one plate number can be entered per task sheet."""
+上机前准备流程示例：建库板号为20250725-1，则输入20250725-1即可启动该任务流程；,"Pre-loading preparation workflow example: if the library preparation plate number is 20250725-1, enter 20250725-1 to start the task workflow."

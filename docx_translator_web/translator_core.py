@@ -401,6 +401,22 @@ def translate_all(api_key, model, texts, target_lang, glossary, overrides=None,
 # ----------------------------------------------------------------------------
 # 第三步:把译文写回段落(只动 run.text,不碰任何格式)
 # ----------------------------------------------------------------------------
+# run 里这些非纯文本元素,一旦 run.text="" 就会被删掉,必须保留:
+#   w:drawing/w:pict/w:object = 图片/OLE;  w:fldChar/w:instrText = 域(自动编号/引用);
+#   w:tab = 制表符;  w:br = 换行;  w:sym = 符号
+_NONTEXT_TAGS = ("w:drawing", "w:pict", "w:object", "w:fldChar",
+                 "w:instrText", "w:tab", "w:br", "w:sym", "w:noBreakHyphen")
+
+
+def _run_has_nontext(run) -> bool:
+    """run 里是否含'非纯文本'元素(图片/域/制表符/换行等),含则不能清空。"""
+    from docx.oxml.ns import qn
+    for tag in _NONTEXT_TAGS:
+        if run._r.find(qn(tag)) is not None or run._r.findall(".//" + qn(tag)):
+            return True
+    return False
+
+
 def write_back(segment: Segment, translated: str) -> None:
     # 目录文本节点:直接改 <w:t> 的文字,不碰域结构。
     if segment.toc_node is not None:
@@ -409,8 +425,14 @@ def write_back(segment: Segment, translated: str) -> None:
     runs = segment.paragraph.runs
     if not runs:
         return
-    runs[0].text = translated
-    for r in runs[1:]:
+    # 关键:含'非纯文本'元素的 run 绝对不能动 —— run.text="" 会连图片/域/制表符/
+    # 换行一起删掉(封面logo丢失、表序号丢失都是这个原因)。
+    # 译文只写进第一个【纯文本】run;其余纯文本 run 清空;含非文本元素的 run 原样保留。
+    text_runs = [r for r in runs if not _run_has_nontext(r)]
+    if not text_runs:
+        return  # 整段只有图片/域等,无纯文本 run 可写
+    text_runs[0].text = translated
+    for r in text_runs[1:]:
         r.text = ""
 
 
