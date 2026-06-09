@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>应用组SOP翻译</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+         margin: 0; background: #f4f6f9; color: #222; }
+  header { background: #1a3a5c; color: #fff; padding: 18px 28px; }
+  header h1 { margin: 0; font-size: 20px; }
+  header p { margin: 4px 0 0; font-size: 13px; opacity: .8; }
+  .contrib { margin-top: 10px; font-size: 12px; opacity: .75; }
+  .contrib a { color: #6fd6d6; text-decoration: none; }
+  .contrib a:hover { text-decoration: underline; }
+  .wrap { max-width: 900px; margin: 24px auto; padding: 0 20px; }
+  .card { background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px;
+          box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .card h2 { margin: 0 0 16px; font-size: 16px; color: #1a3a5c; display: flex; align-items: center; }
+  .step-num { display: inline-flex; align-items: center; justify-content: center;
+              width: 22px; height: 22px; border-radius: 50%; background: #1a73e8; color: #fff;
+              font-size: 13px; font-weight: 700; margin-right: 9px; flex-shrink: 0; }
+  .drop { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+  .drop .pick { background: #1a73e8; color: #fff; border-radius: 6px; padding: 9px 18px;
+                font-size: 14px; }
+  .drop:hover .pick { background: #1666d4; }
+  .drop input { display: none; }
+  .drop.over .pick { background: #1666d4; }
+  .keybox { margin-top: 16px; padding-top: 14px; border-top: 1px solid #eef0f3; }
+  .keylabel { font-size: 13px; color: #555; cursor: pointer; user-select: none; }
+  .keyinput { width: 100%; margin-top: 10px; padding: 9px 12px; border: 1px solid #d0d8e0;
+              border-radius: 6px; font-size: 13px; }
+  button { background: #1a73e8; color: #fff; border: 0; border-radius: 6px;
+           padding: 10px 22px; font-size: 14px; cursor: pointer; }
+  button:disabled { background: #b8c4d0; cursor: not-allowed; }
+  button.sec { background: #fff; color: #1a73e8; border: 1px solid #1a73e8; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px; }
+  .stat { background: #f7f9fc; border-radius: 8px; padding: 12px 14px; }
+  .stat .v { font-size: 22px; font-weight: 700; color: #1a3a5c; }
+  .stat .l { font-size: 12px; color: #889; margin-top: 2px; }
+  .cost { background: #fff7e6; border: 1px solid #ffd591; border-radius: 8px;
+          padding: 14px 16px; font-size: 14px; }
+  .cost b { color: #d46b08; font-size: 20px; }
+  .beg { margin-top: 14px; background: linear-gradient(135deg,#fff0f5,#fff7e6);
+         border: 2px dashed #ff9eb5; border-radius: 12px; padding: 20px; text-align: center; }
+  .beg-emoji { font-size: 40px; line-height: 1.2; }
+  .beg-title { font-size: 18px; font-weight: 700; color: #d6336c; margin: 8px 0; }
+  .beg-body { font-size: 14px; color: #555; line-height: 1.8; }
+  .beg-body b { color: #d46b08; }
+  .beg-ascii { display: block; margin-top: 6px; color: #e8590c; font-size: 15px; }
+  .beg-foot { margin-top: 12px; font-size: 13px; color: #888; }
+  .beg-foot a { color: #1a73e8; text-decoration: none; }
+  .bar { height: 22px; background: #e8edf2; border-radius: 11px; overflow: hidden; }
+  .bar > div { height: 100%; background: linear-gradient(90deg,#1a73e8,#38b2f4);
+               width: 0; transition: width .3s; }
+  .muted { color: #889; font-size: 13px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid #eef0f3; }
+  th { background: #f7f9fc; position: sticky; top: 0; }
+  .gloss-box { max-height: 380px; overflow: auto; border: 1px solid #eef0f3; border-radius: 8px; }
+  .search { width: 100%; padding: 8px 12px; border: 1px solid #d0d8e0; border-radius: 6px;
+            font-size: 14px; margin-bottom: 10px; }
+  .tag { display:inline-block; background:#fde8e8; color:#c0392b; font-size:11px;
+         padding:1px 6px; border-radius:4px; margin-left:4px; }
+  .hide { display: none; }
+  .preview { max-height: 360px; overflow: auto; border: 1px solid #eef0f3; border-radius: 8px;
+             padding: 14px; font-size: 13px; line-height: 1.7; }
+  .preview p { margin: 0 0 8px; }
+  .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .err { color: #c0392b; }
+  .ok { color: #1a7f37; }
+</style>
+</head>
+<body>
+<header>
+  <h1>应用组SOP翻译</h1>
+  <p>上传 Word 文档，自动翻译并完整保留图片、排版、表格、目录。基于豆包翻译模型 + NGS 专业术语表。</p>
+  <div class="contrib">
+    由 <b>BGI40286</b> 制作 ·
+    <a href="https://github.com/yoshnii/SOP-translation" target="_blank" rel="noopener">GitHub: yoshnii/SOP-translation</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- 上传 -->
+  <div class="card" id="uploadCard">
+    <h2><span class="step-num">1</span>上传文档</h2>
+    <label class="drop" id="drop">
+      <input type="file" id="file" accept=".docx">
+      <span class="pick">选择 .docx 文件</span>
+      <span class="muted" id="dropText">或将文件拖到此处</span>
+    </label>
+    <div class="keybox">
+      <label class="keylabel">
+        <input type="checkbox" id="useOwnKey"> 用自己的 Key（各付各的，不用给作者转钱）
+      </label>
+      <input type="password" id="ownKey" class="keyinput hide" placeholder="ark-... 你的 API Key（只在本次翻译用，不保存）" autocomplete="off">
+      <p class="muted" id="keyHint">默认用服务器的 Key（走作者额度，翻完会提示给作者转个辛苦费）。</p>
+    </div>
+  </div>
+
+  <!-- 统计 + 费用 -->
+  <div class="card hide" id="statCard">
+    <h2><span class="step-num">2</span>文档分析与费用预估</h2>
+    <div class="stats" id="stats"></div>
+    <div class="cost" id="cost" style="margin-top:14px"></div>
+    <div style="margin-top:16px" class="row">
+      <button id="startBtn">开始翻译</button>
+      <span class="muted" id="fileLabel"></span>
+    </div>
+  </div>
+
+  <!-- 进度 -->
+  <div class="card hide" id="progCard">
+    <h2><span class="step-num">3</span>翻译进行中</h2>
+    <div class="bar"><div id="barFill"></div></div>
+    <p class="muted" id="progText" style="margin-top:10px">准备中…</p>
+  </div>
+
+  <!-- 结果 -->
+  <div class="card hide" id="resultCard">
+    <h2><span class="step-num">4</span>完成 · 结算与下载</h2>
+    <div class="cost" id="finalCost"></div>
+    <div class="beg hide" id="beg"></div>
+    <div class="stats" id="finalStats" style="margin-top:14px"></div>
+    <div style="margin-top:16px" class="row">
+      <button id="downloadBtn">下载译文 .docx</button>
+      <button class="sec" id="previewBtn">在线预览</button>
+      <button class="sec" id="resetBtn">翻译新文档</button>
+    </div>
+    <div class="preview hide" id="preview" style="margin-top:16px"></div>
+  </div>
+
+  <!-- 术语表 -->
+  <div class="card">
+    <h2>术语表</h2>
+    <input class="search" id="glossSearch" placeholder="搜索中文 / 英文术语…">
+    <div class="gloss-box">
+      <table>
+        <thead><tr><th style="width:38%">中文</th><th>英文（标准译法）</th></tr></thead>
+        <tbody id="glossBody"></tbody>
+      </table>
+    </div>
+    <p class="muted" id="glossNote" style="margin-top:8px"></p>
+  </div>
+
+</div>
+
+<script>
+let JOB = null, pollTimer = null, GLOSS = [];
+
+const $ = id => document.getElementById(id);
+const show = (id, on=true) => $(id).classList.toggle('hide', !on);
+
+// ---- 上传 ----
+const drop = $('drop'), fileInput = $('file');
+['dragover','dragenter'].forEach(e => drop.addEventListener(e, ev => {
+  ev.preventDefault(); drop.classList.add('over');
+}));
+['dragleave','drop'].forEach(e => drop.addEventListener(e, ev => {
+  ev.preventDefault(); drop.classList.remove('over');
+}));
+drop.addEventListener('drop', ev => { if (ev.dataTransfer.files.length) handleFile(ev.dataTransfer.files[0]); });
+fileInput.addEventListener('change', () => { if (fileInput.files.length) handleFile(fileInput.files[0]); });
+
+async function handleFile(file) {
+  if (!file.name.toLowerCase().endsWith('.docx')) { alert('只支持 .docx 文件'); return; }
+  $('dropText').textContent = '上传中：' + file.name;
+  const fd = new FormData(); fd.append('file', file);
+  const r = await fetch('/api/upload', { method:'POST', body: fd });
+  if (!r.ok) { const e = await r.json(); alert('上传失败：' + (e.detail||r.status)); $('dropText').textContent='点击或拖拽 .docx 文件到这里'; return; }
+  JOB = await r.json();
+  renderStats();
+}
+
+function fmt(n){ return (n==null)?'—':n.toLocaleString(); }
+
+function renderStats() {
+  show('statCard', true);
+  $('fileLabel').textContent = JOB.filename;
+  $('stats').innerHTML = `
+    <div class="stat"><div class="v">${fmt(JOB.total_segments)}</div><div class="l">总段落</div></div>
+    <div class="stat"><div class="v">${fmt(JOB.translate_segments)}</div><div class="l">需翻译段</div></div>
+    <div class="stat"><div class="v">${fmt(JOB.unique_segments)}</div><div class="l">去重后</div></div>
+    <div class="stat"><div class="v">${fmt(JOB.images)}</div><div class="l">图片（保留）</div></div>
+    <div class="stat"><div class="v">${fmt(JOB.in_chars)}</div><div class="l">中文字符</div></div>`;
+  $('cost').innerHTML = `预估费用：<b>￥${JOB.cost_est}</b> 　<span class="muted">（豆包翻译按字符计费 · 输入1.2元 / 输出3.6元 每百万字符；输出按1.8倍估算）</span>`;
+  $('statCard').scrollIntoView({behavior:'smooth'});
+}
+
+// ---- 自带 Key 开关 ----
+$('useOwnKey').addEventListener('change', e => {
+  const on = e.target.checked;
+  show('ownKey', on);
+  $('keyHint').textContent = on
+    ? '已选择用你自己的 Key —— 费用走你自己的账户，不用给作者转钱。'
+    : '默认用服务器的 Key（走作者额度，翻完会提示给作者转个辛苦费）。';
+});
+
+// ---- 开始翻译 ----
+$('startBtn').addEventListener('click', async () => {
+  const useOwn = $('useOwnKey').checked;
+  const ownKey = $('ownKey').value.trim();
+  if (useOwn && !ownKey) { alert('你勾选了用自己的 Key，但还没填。请填入 ark- 开头的 Key，或取消勾选。'); return; }
+  $('startBtn').disabled = true;
+  const body = useOwn ? { api_key: ownKey } : {};
+  const r = await fetch('/api/translate/' + JOB.job_id, {
+    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+  });
+  if (!r.ok) { const e = await r.json(); alert('启动失败：'+(e.detail||r.status)); $('startBtn').disabled=false; return; }
+  show('progCard', true);
+  $('progCard').scrollIntoView({behavior:'smooth'});
+  pollTimer = setInterval(poll, 800);
+});
+
+async function poll() {
+  const r = await fetch('/api/status/' + JOB.job_id);
+  const s = await r.json();
+  if (s.status === 'running') {
+    $('barFill').style.width = s.percent + '%';
+    $('progText').textContent = `已翻译 ${s.done} / ${s.total} 段（${s.percent}%）`;
+  } else if (s.status === 'done') {
+    clearInterval(pollTimer);
+    $('barFill').style.width = '100%';
+    $('progText').textContent = '完成！';
+    JOB = s; renderResult();
+  } else if (s.status === 'error') {
+    clearInterval(pollTimer);
+    $('progText').innerHTML = '<span class="err">翻译出错：' + (s.error||'') + '</span>';
+  }
+}
+
+function renderResult() {
+  show('resultCard', true);
+  if (JOB.own_key) {
+    // 用户自带 key —— 各付各的,不乞讨
+    $('finalCost').innerHTML = `本次费用：<b>￥${JOB.cost}</b>（已走你自己的 Key，无需转账）。`;
+    show('beg', false);
+  } else {
+    // 走作者额度 —— 显示求转账
+    $('finalCost').innerHTML = `本次翻译花了丁善 <b>￥${JOB.cost}</b> 的 tokens。`;
+    $('beg').innerHTML = begHtml(JOB.cost);
+    show('beg', true);
+  }
+  const resid = JOB.residual_zh;
+  const residHtml = resid > 0
+    ? `<div class="stat"><div class="v err">${resid}</div><div class="l">残留中文段（多为中英混排原文）</div></div>`
+    : `<div class="stat"><div class="v ok">0</div><div class="l">无残留中文</div></div>`;
+  $('finalStats').innerHTML = `
+    <div class="stat"><div class="v">${fmt(JOB.in_chars)}</div><div class="l">输入字符</div></div>
+    <div class="stat"><div class="v">${fmt(JOB.out_chars)}</div><div class="l">输出字符</div></div>
+    <div class="stat"><div class="v">${fmt(JOB.images)}</div><div class="l">图片保留</div></div>
+    ${residHtml}`;
+  $('resultCard').scrollIntoView({behavior:'smooth'});
+}
+
+// 求转账文案(无 emoji)
+function begHtml(cost) {
+  return `
+    <div class="beg-emoji">( T﹏T )</div>
+    <div class="beg-title">求求了，给丁善施舍一点点吧～</div>
+    <div class="beg-body">
+      这次翻译丁善（工号 <b>BGI40286</b>）的额度被你薅走了 <b>￥${cost}</b> 的 tokens。<br>
+      虽然不多，但积少成多，丁善的钱包已经在小声哭泣。<br>
+      <span class="beg-ascii">┌(￣ヘ￣┐)…(┌￣ヘ￣)┐ 给点辛苦费让我续杯咖啡</span>
+    </div>
+    <div class="beg-foot">扫码 / 转账随意打赏，多少都是爱 &nbsp;|&nbsp;
+      觉得好用就去 <a href="https://github.com/yoshnii/SOP-translation" target="_blank" rel="noopener">GitHub Star 一个</a> 也行！</div>`;
+}
+
+$('downloadBtn').addEventListener('click', () => { window.location = '/api/download/' + JOB.job_id; });
+
+$('previewBtn').addEventListener('click', async () => {
+  const r = await fetch('/api/preview/' + JOB.job_id);
+  const d = await r.json();
+  $('preview').innerHTML = d.paragraphs.map(p => '<p>' + escapeHtml(p) + '</p>').join('')
+    + (d.total > d.paragraphs.length ? `<p class="muted">…仅预览前 ${d.paragraphs.length} 段，共 ${d.total} 段，完整内容请下载</p>` : '');
+  show('preview', true);
+});
+
+$('resetBtn').addEventListener('click', () => { location.reload(); });
+
+function escapeHtml(s){ return s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+// ---- 术语表 ----
+async function loadGlossary() {
+  const r = await fetch('/api/glossary');
+  const d = await r.json();
+  GLOSS = d.items;
+  $('glossNote').textContent = `共 ${d.count} 条术语，另有 ${d.overrides_count} 条整句覆盖规则（人工修复的标准译文）。带红标的术语含「错译纠正」。`;
+  renderGloss('');
+}
+function renderGloss(q) {
+  q = q.trim().toLowerCase();
+  const rows = GLOSS.filter(it => !q || it.zh.toLowerCase().includes(q) || it.en.toLowerCase().includes(q));
+  $('glossBody').innerHTML = rows.map(it =>
+    `<tr><td>${escapeHtml(it.zh)}</td><td>${escapeHtml(it.en)}${it.wrongs && it.wrongs.length ? '<span class="tag">纠错</span>' : ''}</td></tr>`
+  ).join('') || '<tr><td colspan="2" class="muted">无匹配</td></tr>';
+}
+$('glossSearch').addEventListener('input', e => renderGloss(e.target.value));
+loadGlossary();
+</script>
+</body>
+</html>

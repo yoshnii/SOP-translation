@@ -1,0 +1,43 @@
+# ===== 文档(真实 SOP / 公司内部资料,不入库)=====
+*.docx
+*.pptx
+*.pdf
+*.doc
+*.ppt
+
+# ===== API key / 环境变量 =====
+.env
+*.env
+
+# ===== Python =====
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# ===== 翻译产物 / 运行时数据 =====
+docx_translator_web/data/
+*_EN.docx
+*_FAKE.docx
+*_en.docx
+
+# ===== 临时 / 备份 =====
+*.bak
+*.bak2
+glossary.csv.bak*
+~$*
+.DS_Store
+
+# ===== 编辑器 =====
+.vscode/
+.idea/
+
+# ===== 中间文件(workflow/分析产生的)=====
+_*.json
+_*.txt
+
+# ===== 杂项文本(模板/草稿)=====
+template.txt
+english_template.txt
+english_sop.txt
+.claude/

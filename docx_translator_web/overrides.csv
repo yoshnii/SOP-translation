@@ -1,0 +1,47 @@
+原文,译文
+# QC整句修复:原文精确命中时直接用此译文(优先级高于豆包翻译),
+联合探针锚定聚合测序法,cPAS (combinatorial Probe-Anchor Synthesis)
+单反应用量,Volume per reaction
+连接MIX-2(空)PCR MIX-2(空)仅在样本数>32时需放置,Ligation MIX-2 (empty) and PCR MIX-2 (empty) only need to be placed when the number of samples is greater than 32
+板号扫码核对图示,Illustration of Plate Number Barcode Verification
+"上机前准备脚本最多支持8个DNB,请参考通量限制下单",The pre-loading preparation script supports a maximum of 8 DNBs; please place orders within the throughput limit
+图4 标曲台面图,Figure 4: Standard curve deck layout
+本文档适用于...进行PMseq DNA感染病原微生物靶向高通量基因检测的核酸提取、文库构建、文库Pooling及Make DNB,"This document applies to nucleic acid extraction, library construction, library pooling, and DNB (DNA Nanoball) preparation performed on the GenSIRO-48 system for PMseq DNA-based targeted high-throughput sequencing of infectious pathogens."
+表10 上机前准备其他试剂分装表,Table 10: Aliquoting Table for Other Reagents in Pre-Loading Preparation
+选择'全流程及前处理建库及前处理杂洗',Full-process and Pre-processing Library Preparation and Pre-processing Hybridization Wash
+图S3-1 中台任务下达图示,Figure S3-1: Middleware task submission
+中台软件及SIRO48软件登录(图2),Figure 2: Login to the Task Center software and the SIRO48 software
+表12 提取预分装试剂流程深孔板试剂分装表,Table 12: Deep-well plate reagent dispensing table for the extraction reagent pre-dispensing workflow
+样本萃取液/人份(计量单位),48 tests
+联合实验室PMseq DNA病原微生物高通量基因检测GenSIRO-48平台标准作业指导书(标题),Joint Laboratory SOP for the GenSIRO-48 Platform for PMseq DNA Pathogen High-Throughput Gene Detection
+实验人员严格按照标准作业指导书进行操作,Laboratory personnel shall operate in strict accordance with this SOP.
+"短暂离心:室温条件下,在离心机上离心至壁上无残留液体",Brief centrifugation: Briefly centrifuge at room temperature until no residual liquid remains on the tube wall.
+新基元(品牌名),Xinjiyuan
+去宿主阴性对照品,Host-depletion negative control
+(20倍内标)/(200倍内标),(20× internal standard)
+溶解液(R2溶解液),Resuspension Solution
+定量染液:颠倒混匀后备用,"Quantification Dye: invert to mix, then set aside ready for use."
+通量/例(表头),Per Sample (Volume)
+吸头紧贴侧壁随液面缓慢下移吸取上清,keeping the pipette tip close to the side wall and moving it down slowly along with the liquid level to aspirate the supernatant
+非血样本:将破壁后的2mL离心管置于恒温混匀仪上56℃温浴10min,Place the 2 mL centrifuge tube from the cell wall disruption step (6.3.4) on the thermomixer and incubate at 56°C for 10 minutes.
+"若样本数=n,则M2_POS11的定量管需根据样本个数分别从第1列和第7列摆放n个",place n quantitation tubes in slot M2_POS11 starting from column 1 and n tubes starting from column 7
+M2_POS10温控八连管位摆放,the 8-tube strip placement at temperature-controlled position M2_POS10
+图27/28 送检单模板/选择界面,request form
+"横向尺寸(码的最小宽度,密度)",Transverse dimension (minimum bar width
+图2 贴码图示,Figure 2: Barcode Labeling Illustration
+主要成分(表头),Main Components
+分装(动词/名词),aliquot
+"如正常上机测序后,任务状态会关联测序状态","If sequencing runs normally, the task status will be linked to the sequencing status"
+DNB定量(标题),DNB Quantification
+"提取预分装试剂(适用于PMseqDNA008,预分装动作)",Pre-dispensing of extraction reagents
+"按如下台面图,将预分装的深孔板及耗材放入提取仓","Following the deck layout below, load the pre-dispensed deep-well plates and consumables into the extraction chamber"
+黄色'空'对应位置需放置空耗材-2.0mL冻存管,Place an empty consumable (a 2.0 mL cryovial) at the position marked yellow 'empty'.
+"全流程参照6.5.1,前处理建库参照6.5.2,上机前准备参照6.5.3","For the full process, refer to 6.5.1; for pretreatment and library preparation, refer to 6.5.2; for pre-loading preparation, refer to 6.5.3."
+图6 中台定标判定结果(图为不通过),Figure 6: Middleware calibration result (showing a failure)
+图S2-1/S2-2 全流程/前处理建库...模板填写示例,Full Workflow
+图S2-3/S2-4 上机前准备模板填写示例,pre-sequencing (pre-loading) preparation template
+图S4-1 中台开始实验图示,Figure S4-1: Starting the experiment in the middleware
+文件新增First Release(修订记录),New document (First Release)
+图21 前处理建库试剂板位示意图,Figure 21: Schematic diagram of reagent plate positions for pre-processing library preparation
+图1 标曲板位示意图,Figure 1: Schematic of the standard curve plate layout
+图3 中台定标图示,Figure 3: Middleware calibration interface

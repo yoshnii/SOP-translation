@@ -1,0 +1,15 @@
+services:
+  translator:
+    build: .
+    image: docx-translator:latest
+    container_name: docx-translator
+    ports:
+      - "8000:8000"
+    environment:
+      # 服务器统一使用的火山方舟 key —— 写在同目录 .env 文件里(见 .env.example)
+      - ARK_API_KEY=${ARK_API_KEY}
+      - ARK_MODEL=${ARK_MODEL:-doubao-seed-translation-250915}
+    volumes:
+      # 把产物目录挂出来,容器重建也不丢已翻译的文件(可选)
+      - ./data:/app/data
+    restart: unless-stopped

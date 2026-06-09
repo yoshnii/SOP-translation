@@ -1,0 +1,224 @@
+中文,英文,备注
+# 术语对照表:左边中文出现时,AI 必须用右边的固定英文译法。
+"# 用法:填好""英文""列",空着的行表示尚未确定(AI 会自行翻译)。
+# 以 # 开头的行是注释,会被忽略。匹配区分大小写、按整词优先长词。
+# 第4列【错译】可选,分号(;)分隔;豆包把该词翻成这些错误英文时,强制改回标准译法。
+# ====== 酶 / 缓冲液 / 试剂 (核心术语,已填标准译法,请你复核) ======
+连接酶,Ligase,,Connection enzyme
+末端修复酶,End Repair Enzyme,,Terminal repair enzyme
+末端修复缓冲液,End Repair Buffer,,Buffer solution for endotoxin removal;End Repair Buffer solution
+连接缓冲液,Ligation Buffer,,Connection;Connection Buffer;Connection buffer solution
+洗脱缓冲液,Elution Buffer,
+环化反应缓冲液,Circularization Buffer,
+PCR反应液,PCR Reaction Mix,,PCR reaction solution
+PCR引物,PCR Primer,
+裂解液,Lysis Buffer,,Lysis solution
+清洗液,Wash Buffer,,Cleaning solution;washing solution
+蛋白酶K,Proteinase K,
+磁珠,Magnetic Beads,
+末修缓冲液,End Repair Buffer,末端修复缓冲液的简写,Buffer solution for endotoxin removal;End Repair Buffer solution
+末修酶,End Repair Enzyme,末端修复酶的简写,Terminal repair enzyme
+# ====== DNB / 测序相关 ======
+DNB制备缓冲液,DNB Preparation Buffer,DNB=DNA Nanoball
+DNB聚合酶混合液,DNB Polymerase Mix,
+DNB终止缓冲液,DNB Stop Buffer,
+# ====== 耗材 / 器材 ======
+冻存管,Cryovial,如 0.5mL/2.0mL 冻存管
+试剂槽,Reagent Trough,,Reagent reservoir;reagent tray;reagent tank
+螺纹管,Screw-cap Tube,,threaded tube;Screw-Cap Reagent Tubes
+试剂名称,Reagent,表头字段,Reagent Name
+耗材,Consumables,
+耗材数量,Consumable Quantity,,The Quantity of materials;The number of Consumables
+数量,Quantity,
+# ====== 流程 / 步骤 ======
+血浆分离,Plasma Separation,
+提取,Extraction,,Exaction
+建库,Library Preparation,,database construction;Database Construction;database creation;build a database;building a database;Database Building;database building;Database product;Database table
+上机前准备,Pre-run Preparation,,getting on the plane;preparation before getting on the plane;pre-flight preparation;pre-flight;Pre-machine;before using the computer;uploading to the computer system
+环化反应,Circularization,
+末端修复,End Repair,
+# ====== 表头 / 元数据字段 ======
+物料编码,Material Code,
+物料名,Material Name,
+物料数量,Quantity,,The Quantity of materials;The number of Consumables
+损耗系数,Loss Factor,
+单反应标准用量,Standard Volume per Reaction,
+管底冗余,Dead Volume,管底死体积
+序号,No.,
+版本号,Version,
+修订内容摘要,Revision Summary,,Summary of the amendments
+备注,Remarks,
+# ====== 顽固短标记(模型对孤立短词翻译不稳,此处作兜底固定译法)======
+注意事项,Cautionary Notes,
+注意,Note,
+警告,Warning,
+文件密级,Document Classification,
+文件编号,Document No.,
+# ====== 高频短标记 / 步骤名(补充,请复核)======
+全流程,Full Process,,whole process;Full-process;the entire process
+前处理建库,Pre-processing & Library Prep,
+装量,Volume,,Loading capacity
+通量,throughput,,transaction limit
+通量/例,Throughput/Sample,
+单位,Unit,
+类型,Type,
+格式,Format,
+需要,Required,
+不需要,Not Required,
+适用范围,Applicable Scope,
+目的,Purpose,
+职责,Responsibilities,
+术语和定义,Terms and Definitions,
+相关文件,Related Documents,
+相关记录,Related Records,
+附录,Appendix,
+修订记录,Revision History,
+# ====== 文件头字段(签名栏)======
+起草人,Drafted by,
+起草日期,Drafting Date,
+审核人,Reviewed by,
+审核日期,Review Date,
+批准人,Approved by,
+批准日期,Approval Date,
+生效日期,Effective Date,
+版本,Version,
+# ====== 机构 / 产品名(通常不翻或用官方名) ======
+华大基因,BGI,官方英文名 BGI / BGI Genomics
+华大智造,MGI,华大智造官方英文名 MGI
+"# ====== 对照人工英文版校准(workflow提取,已审核)======",,
+全因,NIFTY Pro,[人工版] 流程名,Full Cause;Full-Fact;full-factor
+起始台面布置,Initial Bench Setup,[人工版] 流程名,Initial tabletop arrangement
+提取台面布置,Extraction Bench Setup,[人工版] 流程名
+建库台面布置,Library Preparation Deck Setup,[人工版] 流程名,Database table layout
+测序上机,Sequencing Run,[人工版] 流程名
+后期清洁,Post-Run Cleaning,[人工版] 流程名,Post-cleaning
+前处理建库实验工序,Pre-Processing Library Preparation,[人工版] 流程名,Pre-processing library construction
+上机测序,Sequencing Run,[人工版] 流程名,on-line sequencing;online sequencing
+提取前试剂准备,Reagent Preparation Prior to Extraction,[人工版] 流程名,Preparation of reagents before Extraction
+建库试剂准备,Library Preparation Reagent Setup,[人工版] 流程名
+设备初始化及前期清洁,GenSIRO-48 Initialization and Cleaning,[人工版] 流程名,Device initialization and preliminary cleaning
+前期准备,Initial Bench Setup,[人工版] 流程名,Preparations in the early stage
+避光分液槽,Light-protected Reagent Trough,[人工版] 耗材,light-proof liquid separation tank
+黑色避光试剂槽,Light-protected Reagent Trough,[人工版] 耗材,light-proof liquid separation tank
+可掰断8连管,Breakable 8-tube strips,[人工版] 耗材,8-tube strip;breakable 8-way connectors
+八联管,Breakable 8-tube strips,[人工版] 耗材,8-tube strip;breakable 8-way connectors
+定量管,Quantification Tube,[人工版] 耗材,quantitative tube;quantitative sample tube;standard quantitative tube
+定量样品管,Quantification Tube,[人工版] 耗材,quantitative tube;quantitative sample tube;standard quantitative tube
+标准品定量管,Quantification Tube,[人工版] 耗材,quantitative tube;quantitative sample tube;standard quantitative tube
+采血管,Blood Tube,[人工版] 耗材,blood collection tube;collection tube
+血浆最终管,terminal tube,[人工版] 耗材,final tube
+无尘纸,lint-free wipes,[人工版] 耗材,dust-free paper
+PCR胶垫,PCR gasket,[人工版] 耗材,PCR gel pads
+定量检测管,quantification tube,[人工版] 耗材,Quantitative Detection Tube
+2.2ml 96方孔尖底深孔板,2.2 mL deep-well plate,[人工版] 耗材
+单孔槽和槽盖套装,Reagent Trough,[人工版] 耗材
+载架,Rack,[人工版] 耗材,loading rack
+吸头,pipette tip,[人工版] 耗材,suction tip
+接头稀释,Adapter Dilution,[人工版] 试剂,connectors;joints;connector dilution;Label connectors
+接头,Adapter,[人工版] 试剂,connector;joint
+连接,Ligation,[人工版] 缓冲液,Connection
+清洗液1,Wash Buffer 1,[人工版] 缓冲液,Cleaning solution 1;Cleaning solution 2
+清洗液2,Wash Buffer 2,[人工版] 缓冲液,Cleaning solution 1;Cleaning solution 2
+定量标准品,Quantification Standard,[人工版] 试剂,Quantitative standard product
+定量染液,Quantification Dye,[人工版] 试剂,Quantitative staining solution
+医用酒精,medical-grade ethanol,[人工版] 试剂,medical alcohol
+震荡混匀,Vortex,[人工版] 试剂,shake vigorously;vortexed
+旋涡震荡,Vortex,[人工版] 试剂,shake vigorously;vortexed
+合板,task sheet,[人工版] 其它,plywood
+中台,Task Center,[人工版] 其它,Tai Software;centralized management model;middle and upper levels of the organization;center panel
+中台软件,middleware,[人工版] 其它,central platform;central control software
+舱门,chamber doors,[人工版] 其它,cabin doors
+联合实验室,Joint Lab,[人工版] 其它,joint laboratory
+电源开关,power switch,[人工版] 其它,
+视窗,viewing window,[人工版] 其它,
+样本待排孔,Sample Awaiting Well Assignment,[人工版] 字段,
+排孔,well assignment,[人工版] 字段,drilling
+分装,Aliquoting,[人工版] 字段,packaging;packing
+无水乙醇加入量,Volume of anhydrous ethanol to be added,[人工版] 字段,
+异丙醇加入量,Volume of isopropanol to be added,[人工版] 字段,
+96人份试剂,96-Sample Reagent Kit,[人工版] 字段,96 doses of reagents
+送检单,Request Form,[人工版] 字段,submission form
+质控品类型,QC Type,[人工版] 字段,type of quality control products
+阳性质控品,Positive Control,[人工版] 字段,
+阴性质控品,Negative Control,[人工版] 字段,
+基础版,Basic,[人工版] 字段,basic version
+主要成分,Description,[人工版] 字段,The main ingredients
+提取试剂分装表,Reagent Aliquoting for Extraction,[人工版] 字段,Extraction Reagent Packaging Table
+标签规则,Barcode Rule,[人工版] 字段,Label rules
+提取试剂准备,Reagent Preparation for Extraction,[人工版] 字段,Preparation of Extraction Reagents
+建库试剂盒分装表,Reagent Aliquoting for Library Preparation,[人工版] 字段
+样本装量,Samples,[人工版] 字段,loading quantity;loading volume
+扫描表,scan records,[人工版] 字段,scanned tables;scan table
+质控样本,QC sample,[人工版] 字段,quality control samples
+投入系数,Pooling Coefficient,[人工版] 字段,
+投递中,Submitting,[人工版] 字段,delivering
+待开始,Pending Start,[人工版] 字段,
+标本,Sample,[人工版] 字段,Specimen
+样本总数大于24时放置,Required when total sample count > 24,[人工版] 标记
+标准作业指导书,SOP,[人工版] 其它,standard operating procedures
+去宿主,Host depletion,[QC],Go to the host's place;Go to the host;For the host;go to the host
+洗液,Wash Buffer,[QC],Lotion;washing solution
+标曲,standard curve,[QC],scoreboard;marker board
+标准曲线,standard curve,[QC],scoreboard;marker board
+破壁,Cell Wall Disruption,[QC],Break through barriers;break through barriers;wall-breaking
+单反应用量,Volume per reaction,[QC],DSLR cameras;The usage of DSLR cameras
+无核酸酶水,Nuclease-free Water,[QC],Nuclear acid-free water
+核酸,nucleic acid,[QC],nuclear acid
+组织样本,Tissue sample,[QC],Organizational samples;organizational sample
+全血,Whole blood,[QC],Full blood
+结合液,Binding Buffer,[QC],Combined liquid
+溶解液,Resuspension Solution,[QC],dissolution solution
+枪头,pipette tip,[QC],gun head;gun heads
+提取仓,extraction chamber,[QC],Extraction warehouse;extraction warehouse
+分液槽,reagent trough,[QC],separating funnel;partition trough
+深孔板,deep-well plate,[QC],deep-hole plate;deep hole plate
+杂洗,Hybridization Wash,[QC],Mixed Washing;Mixed Wash
+人份,tests,[QC],servings
+建库产物,Library product,[QC],
+建库仓,Library Preparation chamber,[QC],
+Make DNB,DNB (DNA Nanoball) preparation,[QC],
+DNB,DNB (DNA Nanoball) preparation,[QC],
+联合探针锚定聚合测序法,cPAS,[QC],
+去宿主样本,Host-depleted sample,[QC],
+未去宿主样本,Sample without host depletion,[QC],
+上机,loading onto the instrument,[QC],on the computer;using the computer;uploading to the computer;logging in;on-line;get on the machine
+任务中台软件,Task Center software,[QC],
+定标,calibration,[QC],
+前处理,Pre-treatment,[QC],
+杂交洗涤,Hybridization Wash,[QC],
+洗脱液,Elution Buffer,[QC],
+染液,Staining (Dye) Solution,[QC],
+标签接头,Index Adapter,[QC],
+酶切反应液,Enzymatic Digestion Reaction Mix,[QC],
+提取磁珠,Extraction Magnetic Beads,[QC],
+内标,internal standard,[QC],
+倍,×,[QC],
+分装量,aliquot,[QC],
+预分装试剂,pre-aliquoted (pre-dispensed) reagents,[QC],
+台面,deck,[QC],
+台面图,deck,[QC],
+板位,plate position,[QC],
+孔,well,[QC],
+孔位,well,[QC],
+推拉列,push-pull column,[QC],
+枪头盒,pipette tip,[QC],
+八连管,8-tube strip,[QC],
+可掰开八连管,8-tube strip,[QC],
+全裙边PCR板,full-skirted PCR plate,[QC],
+半裙边PCR板,full-skirted PCR plate,[QC],
+酶标板,microplate,[QC],
+恒温混匀仪,thermomixer,[QC],
+涡旋,vortex to mix,[QC],
+短暂离心,brief (quick) centrifugation,[QC],
+瞬时离心,brief (quick) centrifugation,[QC],
+吹吸混匀,mix by pipetting up and down,[QC],
+例,Per Sample,[QC],
+方案编号,protocol number,[QC],
+技术路线,workflow,[QC],
+板号,plate number,[QC],
+故障现象,Symptom,[QC],
+处理方法,Solution,[QC],
+现配现用,freshly prepare before use,[QC],
+备用,set aside ready for use,[QC],
+避光,protect from light,[QC],
+新基元,Xinjiyuan,[QC],
