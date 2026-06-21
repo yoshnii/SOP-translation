@@ -49,6 +49,17 @@ JOBS: dict[str, dict] = {}
 
 app = FastAPI(title="DOCX 保格式翻译")
 
+# CORS:允许 Cloudflare Pages 前端跨域调用本地 API。
+# 默认允许所有来源(内部工具,简单);如需收紧,把 allow_origins 改成你的 Pages 域名。
+from fastapi.middleware.cors import CORSMiddleware
+_ALLOWED = os.environ.get("ALLOWED_ORIGINS", "*")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"] if _ALLOWED == "*" else [o.strip() for o in _ALLOWED.split(",")],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # ----------------------------------------------------------------------------
 # 术语表 API

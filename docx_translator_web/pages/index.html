@@ -138,8 +138,8 @@
 
 </div>
 
-<!-- 可选:部署到别处时,放一个 config.js 设 window.API_BASE 指向后端。本地运行不需要。 -->
-<script src="config.js" onerror="void 0"></script>
+<!-- API 地址配置:部署到 Pages 时,在 config.js 里设 window.API_BASE = "https://api.你的域名.com" -->
+<script src="config.js"></script>
 <script>
 let JOB = null, pollTimer = null, GLOSS = [];
 
@@ -147,8 +147,10 @@ const $ = id => document.getElementById(id);
 const show = (id, on=true) => $(id).classList.toggle('hide', !on);
 
 // ============ API 地址配置 ============
-// 本地运行(localhost):API_BASE 为空 = 同源,网址 http://localhost:8000 永久固定。
-// 如需让别人访问:在 config.js 里设 window.API_BASE 指向公网后端地址。
+// 翻译后端在你本地 Python 服务(Docker),通过 Cloudflare Tunnel 暴露。
+// - 本地直接访问(localhost)时:用同源,API_BASE 为空
+// - 部署到 Cloudflare Pages 时:把 window.API_BASE 设成你的 Tunnel 地址
+//   (在 config.js 里设,或下方默认值)
 const API_BASE = (window.API_BASE || "").replace(/\/$/, "");
 const api = (path) => API_BASE + path;
 
