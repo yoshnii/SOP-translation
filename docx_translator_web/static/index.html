@@ -3,243 +3,343 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>应用组SOP翻译</title>
+<title>SOP 自动翻译</title>
 <style>
+  :root {
+    --bg: #fbfbfd;
+    --card: #ffffff;
+    --ink: #1d1d1f;
+    --ink2: #6e6e73;
+    --line: #e8e8ed;
+    --blue: #0071e3;
+    --blue-dark: #0058b8;
+    --amber: #bf7e00;
+    --green: #1d8a4e;
+    --red: #d70015;
+    --radius: 18px;
+    --shadow: 0 4px 24px rgba(0,0,0,.06);
+  }
   * { box-sizing: border-box; }
-  body { font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
-         margin: 0; background: #f4f6f9; color: #222; }
-  header { background: #1a3a5c; color: #fff; padding: 18px 28px; }
-  header h1 { margin: 0; font-size: 20px; }
-  header p { margin: 4px 0 0; font-size: 13px; opacity: .8; }
-  .contrib { margin-top: 10px; font-size: 12px; opacity: .75; }
-  .contrib a { color: #6fd6d6; text-decoration: none; }
-  .contrib a:hover { text-decoration: underline; }
-  .wrap { max-width: 900px; margin: 24px auto; padding: 0 20px; }
-  .card { background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px;
-          box-shadow: 0 1px 4px rgba(0,0,0,.08); }
-  .card h2 { margin: 0 0 16px; font-size: 16px; color: #1a3a5c; display: flex; align-items: center; }
-  .step-num { display: inline-flex; align-items: center; justify-content: center;
-              width: 22px; height: 22px; border-radius: 50%; background: #1a73e8; color: #fff;
-              font-size: 13px; font-weight: 700; margin-right: 9px; flex-shrink: 0; }
-  .drop { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
-  .drop .pick { background: #1a73e8; color: #fff; border-radius: 6px; padding: 9px 18px;
-                font-size: 14px; }
-  .drop:hover .pick { background: #1666d4; }
-  .drop input { display: none; }
-  .drop.over .pick { background: #1666d4; }
-  .keybox { margin-top: 16px; padding-top: 14px; border-top: 1px solid #eef0f3; }
-  .keylabel { font-size: 13px; color: #555; cursor: pointer; user-select: none; }
-  .keyinput { width: 100%; margin-top: 10px; padding: 9px 12px; border: 1px solid #d0d8e0;
-              border-radius: 6px; font-size: 13px; }
-  button { background: #1a73e8; color: #fff; border: 0; border-radius: 6px;
-           padding: 10px 22px; font-size: 14px; cursor: pointer; }
-  button:disabled { background: #b8c4d0; cursor: not-allowed; }
-  button.sec { background: #fff; color: #1a73e8; border: 1px solid #1a73e8; }
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px; }
-  .stat { background: #f7f9fc; border-radius: 8px; padding: 12px 14px; }
-  .stat .v { font-size: 22px; font-weight: 700; color: #1a3a5c; }
-  .stat .l { font-size: 12px; color: #889; margin-top: 2px; }
-  .cost { background: #fff7e6; border: 1px solid #ffd591; border-radius: 8px;
-          padding: 14px 16px; font-size: 14px; }
-  .cost b { color: #d46b08; font-size: 20px; }
-  .bar { height: 22px; background: #e8edf2; border-radius: 11px; overflow: hidden; }
-  .bar > div { height: 100%; background: linear-gradient(90deg,#1a73e8,#38b2f4);
-               width: 0; transition: width .3s; }
-  .muted { color: #889; font-size: 13px; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid #eef0f3; }
-  th { background: #f7f9fc; position: sticky; top: 0; }
-  .gloss-box { max-height: 380px; overflow: auto; border: 1px solid #eef0f3; border-radius: 8px; }
-  .search { width: 100%; padding: 8px 12px; border: 1px solid #d0d8e0; border-radius: 6px;
-            font-size: 14px; margin-bottom: 10px; }
-  .tag { display:inline-block; background:#fde8e8; color:#c0392b; font-size:11px;
-         padding:1px 6px; border-radius:4px; margin-left:4px; }
+  html, body { margin: 0; }
+  body {
+    font-family: -apple-system, "SF Pro Display", "SF Pro Text", "Helvetica Neue",
+                 "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 0 22px 80px; }
+
+  /* 顶部:无色块,纯留白居中 */
+  .hero { text-align: center; padding: 72px 0 44px; }
+  .hero h1 {
+    margin: 0; font-size: 34px; font-weight: 600; letter-spacing: -0.5px;
+    color: var(--ink);
+  }
+  .hero .sub { margin: 14px 0 0; font-size: 18px; color: var(--ink2); font-weight: 400; }
+  .hero .by { margin: 22px 0 0; font-size: 13px; color: var(--ink2); }
+  .hero .by a { color: var(--blue); text-decoration: none; }
+  .hero .by a:hover { text-decoration: underline; }
+
+  /* 卡片 */
+  .card {
+    background: var(--card); border-radius: var(--radius); padding: 30px;
+    margin-bottom: 22px; box-shadow: var(--shadow); border: 1px solid var(--line);
+  }
+  .card h2 {
+    margin: 0 0 20px; font-size: 19px; font-weight: 600; letter-spacing: -0.2px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .step { width: 24px; height: 24px; border-radius: 50%; background: var(--ink);
+          color: #fff; font-size: 13px; font-weight: 600; display: inline-flex;
+          align-items: center; justify-content: center; flex-shrink: 0; }
+
+  /* 按钮(苹果风:圆角胶囊、克制蓝) */
+  .btn {
+    background: var(--blue); color: #fff; border: 0; border-radius: 980px;
+    padding: 11px 24px; font-size: 15px; font-weight: 500; cursor: pointer;
+    transition: background .2s; font-family: inherit;
+  }
+  .btn:hover { background: var(--blue-dark); }
+  .btn:disabled { background: #aebfd4; cursor: not-allowed; }
+  .btn.ghost { background: transparent; color: var(--blue); border: 1px solid #c8d4e6; }
+  .btn.ghost:hover { background: #f0f6ff; }
+
+  /* 上传区:无框,极简 */
+  .pick-wrap { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .pick-wrap input[type=file] { display: none; }
+  .hint { color: var(--ink2); font-size: 14px; }
+
+  /* key 区 */
+  .keybox { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--line); }
+  .keylabel { font-size: 14px; color: var(--ink); cursor: pointer; user-select: none;
+              display: inline-flex; align-items: center; gap: 8px; }
+  .keyinput { width: 100%; margin-top: 12px; padding: 11px 14px; border: 1px solid var(--line);
+              border-radius: 12px; font-size: 14px; font-family: inherit; background: #fafafc; }
+  .keyinput:focus { outline: none; border-color: var(--blue); }
+  .keyhint { color: var(--ink2); font-size: 13px; margin: 10px 0 0; }
+
+  /* 统计格子 */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr)); gap: 14px; }
+  .stat { background: #f5f5f7; border-radius: 14px; padding: 16px; text-align: center; }
+  .stat .v { font-size: 26px; font-weight: 600; letter-spacing: -0.5px; }
+  .stat .l { font-size: 12px; color: var(--ink2); margin-top: 4px; }
+  .cost { background: #fff8ec; border: 1px solid #f3e2bf; border-radius: 14px;
+          padding: 16px 18px; font-size: 15px; color: var(--ink); }
+  .cost b { color: var(--amber); font-size: 22px; font-weight: 600; }
+
+  /* 进度条 */
+  .bar { height: 8px; background: #e9e9ee; border-radius: 99px; overflow: hidden; }
+  .bar > div { height: 100%; background: var(--blue); width: 0; transition: width .3s; border-radius: 99px; }
+
+  .row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .muted { color: var(--ink2); font-size: 14px; }
+  .err { color: var(--red); }
+  .ok { color: var(--green); }
   .hide { display: none; }
-  .preview { max-height: 360px; overflow: auto; border: 1px solid #eef0f3; border-radius: 8px;
-             padding: 14px; font-size: 13px; line-height: 1.7; }
+
+  /* 预览 */
+  .preview { max-height: 380px; overflow: auto; border: 1px solid var(--line);
+             border-radius: 14px; padding: 18px; font-size: 14px; line-height: 1.7; background: #fafafc; }
   .preview p { margin: 0 0 8px; }
-  .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-  .err { color: #c0392b; }
-  .ok { color: #1a7f37; }
+
+  /* 术语表 */
+  .tabs { display: inline-flex; background: #f0f0f3; border-radius: 980px; padding: 3px; margin-bottom: 18px; }
+  .tabs button { border: 0; background: none; padding: 8px 20px; font-size: 14px; font-weight: 500;
+                 border-radius: 980px; cursor: pointer; color: var(--ink2); font-family: inherit; }
+  .tabs button.active { background: #fff; color: var(--ink); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .search { width: 100%; padding: 11px 16px; border: 1px solid var(--line); border-radius: 12px;
+            font-size: 14px; margin-bottom: 14px; font-family: inherit; background: #fafafc; }
+  .search:focus { outline: none; border-color: var(--blue); }
+  .gloss-box { max-height: 420px; overflow: auto; border: 1px solid var(--line); border-radius: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 11px 16px; border-bottom: 1px solid var(--line); }
+  th { background: #fafafc; position: sticky; top: 0; font-weight: 600; color: var(--ink2); font-size: 13px; }
+  tr:last-child td { border-bottom: 0; }
+
+  /* 添加术语 */
+  .addbox { margin-top: 18px; padding: 18px; background: #f5f5f7; border-radius: 14px; }
+  .addbox .frow { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .addbox input, .addbox select {
+    padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; font-size: 14px;
+    font-family: inherit; background: #fff;
+  }
+  .addbox input:focus, .addbox select:focus { outline: none; border-color: var(--blue); }
+  .addbox .msg { margin-top: 10px; font-size: 13px; }
+
+  /* 右下角消耗提示 */
+  .toast { position: fixed; right: 24px; bottom: 24px; width: 272px; z-index: 999;
+           background: #fff; border: 1px solid var(--line); border-radius: 16px;
+           box-shadow: 0 8px 30px rgba(0,0,0,.14); padding: 16px 18px;
+           transform: translateY(20px); opacity: 0; transition: .28s; pointer-events: none; }
+  .toast.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
+  .toast .x { position: absolute; top: 10px; right: 14px; cursor: pointer; color: #c0c0c8;
+              font-size: 20px; line-height: 1; border: 0; background: none; }
+  .toast .x:hover { color: var(--ink2); }
+  .toast .t-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+  .toast .t-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink2); margin: 4px 0; }
+  .toast .t-cost { font-size: 20px; font-weight: 600; color: var(--amber); margin-top: 8px; }
+
+  .footer { text-align: center; color: var(--ink2); font-size: 12px; padding: 40px 0 0; }
 </style>
 </head>
 <body>
-<header>
-  <h1>应用组SOP翻译</h1>
-  <p>上传 Word 文档，自动翻译并完整保留图片、排版、表格、目录。基于豆包翻译模型 + NGS 专业术语表。</p>
-  <div class="contrib">
-    由 <b>BGI40286</b> 制作 ·
-    <a href="https://github.com/yoshnii/SOP-translation" target="_blank" rel="noopener">GitHub: yoshnii/SOP-translation</a>
-  </div>
-</header>
 
 <div class="wrap">
 
+  <!-- 顶部:留白居中,无色块 -->
+  <div class="hero">
+    <h1>SOP 自动翻译</h1>
+    <p class="sub">解决方案中心 · 应用开发组 · 中文 → 英文</p>
+    <p class="sub" style="font-size:15px;margin-top:8px">完整保留图片、排版、表格、目录、页眉页脚 · 由 DeepSeek V4 Pro 驱动</p>
+    <p class="by">由 <b>丁善（BGI40286）</b> 创建 ·
+      <a href="https://github.com/yoshnii/SOP-translation" target="_blank" rel="noopener">GitHub</a>
+    </p>
+  </div>
+
   <!-- 上传 -->
-  <div class="card" id="uploadCard">
-    <h2><span class="step-num">1</span>上传文档</h2>
-    <label class="drop" id="drop">
+  <div class="card">
+    <h2><span class="step">1</span>上传文档</h2>
+    <div class="pick-wrap">
+      <label class="btn" for="file">选择 .docx 文件</label>
       <input type="file" id="file" accept=".docx">
-      <span class="pick">选择 .docx 文件</span>
-      <span class="muted" id="dropText">或将文件拖到此处</span>
-    </label>
+      <span class="hint" id="dropText">或将文件拖到此处</span>
+    </div>
     <div class="keybox">
-      <label class="keylabel">
-        <input type="checkbox" id="useOwnKey"> 用自己的 Key
-      </label>
+      <label class="keylabel"><input type="checkbox" id="useOwnKey"> 用自己的 API Key（商业 AI 接口）</label>
       <input type="password" id="ownKey" class="keyinput hide" placeholder="ark-... 你的 API Key（只在本次翻译用，不保存）" autocomplete="off">
-      <p class="muted" id="keyHint">默认用作者的 Key。</p>
+      <p class="keyhint" id="keyHint">默认用作者的 API Key（商业 AI 接口）。</p>
     </div>
   </div>
 
-  <!-- 统计 + 费用 -->
+  <!-- 分析 -->
   <div class="card hide" id="statCard">
-    <h2><span class="step-num">2</span>文档分析与费用预估</h2>
+    <h2><span class="step">2</span>文档分析</h2>
     <div class="stats" id="stats"></div>
-    <div class="cost" id="cost" style="margin-top:14px"></div>
-    <div style="margin-top:16px" class="row">
-      <button id="startBtn">开始翻译</button>
+    <div class="cost" id="cost" style="margin-top:16px"></div>
+    <div style="margin-top:20px" class="row">
+      <button class="btn" id="startBtn">开始翻译</button>
       <span class="muted" id="fileLabel"></span>
     </div>
   </div>
 
   <!-- 进度 -->
   <div class="card hide" id="progCard">
-    <h2><span class="step-num">3</span>翻译进行中</h2>
+    <h2><span class="step">3</span>翻译中</h2>
     <div class="bar"><div id="barFill"></div></div>
-    <p class="muted" id="progText" style="margin-top:10px">准备中…</p>
+    <p class="muted" id="progText" style="margin-top:14px">准备中…</p>
   </div>
 
   <!-- 结果 -->
   <div class="card hide" id="resultCard">
-    <h2><span class="step-num">4</span>完成 · 结算与下载</h2>
+    <h2><span class="step">4</span>完成</h2>
     <div class="cost" id="finalCost"></div>
-    <div class="stats" id="finalStats" style="margin-top:14px"></div>
-    <div style="margin-top:16px" class="row">
-      <button id="downloadBtn">下载译文 .docx</button>
-      <button class="sec" id="previewBtn">在线预览</button>
-      <button class="sec" id="resetBtn">翻译新文档</button>
+    <div class="stats" id="finalStats" style="margin-top:16px"></div>
+    <div style="margin-top:20px" class="row">
+      <button class="btn" id="downloadBtn">下载译文</button>
+      <button class="btn ghost" id="previewBtn">在线预览</button>
+      <button class="btn ghost" id="resetBtn">翻译新文档</button>
     </div>
-    <div class="preview hide" id="preview" style="margin-top:16px"></div>
+    <div class="preview hide" id="preview" style="margin-top:18px"></div>
   </div>
 
   <!-- 术语表 -->
   <div class="card">
     <h2>术语表</h2>
+    <div class="tabs">
+      <button class="active" data-genre="sci" id="tabSci">科学 / 技术</button>
+      <button data-genre="siro" id="tabSiro">SIRO 产品专有</button>
+    </div>
     <input class="search" id="glossSearch" placeholder="搜索中文 / 英文术语…">
     <div class="gloss-box">
       <table>
-        <thead><tr><th style="width:38%">中文</th><th>英文（标准译法）</th></tr></thead>
+        <thead><tr><th style="width:40%">中文</th><th>英文</th></tr></thead>
         <tbody id="glossBody"></tbody>
       </table>
     </div>
-    <p class="muted" id="glossNote" style="margin-top:8px"></p>
+
+    <!-- 添加术语 -->
+    <div class="addbox">
+      <div class="frow">
+        <input id="addZh" placeholder="中文" style="width:130px">
+        <input id="addEn" placeholder="英文" style="width:160px">
+        <select id="addGenre">
+          <option value="sci">科学 / 技术</option>
+          <option value="siro">SIRO 产品专有</option>
+        </select>
+        <input id="addPw" type="password" placeholder="密码" style="width:90px">
+        <button class="btn" id="addBtn" style="padding:9px 20px">添加</button>
+      </div>
+      <div class="msg" id="addMsg"></div>
+    </div>
   </div>
+
+  <div class="footer">解决方案中心 · 应用开发组 · SOP 自动翻译</div>
 
 </div>
 
-<!-- 可选:部署到别处时,放一个 config.js 设 window.API_BASE 指向后端。本地运行不需要。 -->
+<!-- 右下角消耗提示 -->
+<div class="toast" id="toast">
+  <button class="x" id="toastX" title="关闭">×</button>
+  <div class="t-title">本次翻译消耗</div>
+  <div class="t-row">输入字符 <b id="tIn">—</b></div>
+  <div class="t-row">输出字符 <b id="tOut">—</b></div>
+  <div class="t-cost" id="tCost">￥—</div>
+</div>
+
 <script src="config.js" onerror="void 0"></script>
 <script>
-let JOB = null, pollTimer = null, GLOSS = [];
+let JOB = null, pollTimer = null, GLOSS = [], curGenre = 'sci';
 
 const $ = id => document.getElementById(id);
 const show = (id, on=true) => $(id).classList.toggle('hide', !on);
-
-// ============ API 地址配置 ============
-// 本地运行(localhost):API_BASE 为空 = 同源,网址 http://localhost:8000 永久固定。
-// 如需让别人访问:在 config.js 里设 window.API_BASE 指向公网后端地址。
 const API_BASE = (window.API_BASE || "").replace(/\/$/, "");
-const api = (path) => API_BASE + path;
+const api = (p) => API_BASE + p;
+function fmt(n){ return (n==null)?'—':n.toLocaleString(); }
+function escapeHtml(s){ return s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
 
 // ---- 上传 ----
-const drop = $('drop'), fileInput = $('file');
-['dragover','dragenter'].forEach(e => drop.addEventListener(e, ev => {
-  ev.preventDefault(); drop.classList.add('over');
-}));
-['dragleave','drop'].forEach(e => drop.addEventListener(e, ev => {
-  ev.preventDefault(); drop.classList.remove('over');
-}));
-drop.addEventListener('drop', ev => { if (ev.dataTransfer.files.length) handleFile(ev.dataTransfer.files[0]); });
+const fileInput = $('file');
 fileInput.addEventListener('change', () => { if (fileInput.files.length) handleFile(fileInput.files[0]); });
+// 拖拽
+document.body.addEventListener('dragover', e => e.preventDefault());
+document.body.addEventListener('drop', e => {
+  e.preventDefault();
+  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
 
 async function handleFile(file) {
   if (!file.name.toLowerCase().endsWith('.docx')) { alert('只支持 .docx 文件'); return; }
   $('dropText').textContent = '上传中：' + file.name;
   const fd = new FormData(); fd.append('file', file);
   const r = await fetch(api('/api/upload'), { method:'POST', body: fd });
-  if (!r.ok) { const e = await r.json(); alert('上传失败：' + (e.detail||r.status)); $('dropText').textContent='点击或拖拽 .docx 文件到这里'; return; }
+  if (!r.ok) { const e = await r.json(); alert('上传失败：' + (e.detail||r.status)); $('dropText').textContent='或将文件拖到此处'; return; }
   JOB = await r.json();
   renderStats();
 }
-
-function fmt(n){ return (n==null)?'—':n.toLocaleString(); }
 
 function renderStats() {
   show('statCard', true);
   $('fileLabel').textContent = JOB.filename;
   $('stats').innerHTML = `
     <div class="stat"><div class="v">${fmt(JOB.total_segments)}</div><div class="l">总段落</div></div>
-    <div class="stat"><div class="v">${fmt(JOB.translate_segments)}</div><div class="l">需翻译段</div></div>
-    <div class="stat"><div class="v">${fmt(JOB.unique_segments)}</div><div class="l">去重后</div></div>
-    <div class="stat"><div class="v">${fmt(JOB.images)}</div><div class="l">图片（保留）</div></div>
+    <div class="stat"><div class="v">${fmt(JOB.unique_segments)}</div><div class="l">去重待翻</div></div>
+    <div class="stat"><div class="v">${fmt(JOB.images)}</div><div class="l">图片</div></div>
     <div class="stat"><div class="v">${fmt(JOB.in_chars)}</div><div class="l">中文字符</div></div>`;
-  $('cost').innerHTML = `预估费用：<b>￥${JOB.cost_est}</b> 　<span class="muted">（豆包翻译按字符计费 · 输入1.2元 / 输出3.6元 每百万字符；输出按1.8倍估算）</span>`;
+  $('cost').innerHTML = `预估费用 <b>￥${JOB.cost_est}</b> <span class="muted">（DeepSeek V4 Pro 章节级翻译，按 token 计费）</span>`;
   $('statCard').scrollIntoView({behavior:'smooth'});
 }
 
-// ---- 自带 Key 开关 ----
+// ---- key 开关 ----
 $('useOwnKey').addEventListener('change', e => {
-  const on = e.target.checked;
-  show('ownKey', on);
-  $('keyHint').textContent = on
-    ? '已选择用你自己的 Key —— 费用走你自己的账户。'
-    : '默认用作者的 Key。';
+  show('ownKey', e.target.checked);
+  $('keyHint').textContent = e.target.checked
+    ? '已选择用你自己的 API Key —— 费用走你自己的账户。'
+    : '默认用作者的 API Key（商业 AI 接口）。';
 });
 
 // ---- 开始翻译 ----
 $('startBtn').addEventListener('click', async () => {
-  const useOwn = $('useOwnKey').checked;
-  const ownKey = $('ownKey').value.trim();
-  if (useOwn && !ownKey) { alert('你勾选了用自己的 Key，但还没填。请填入 ark- 开头的 Key，或取消勾选。'); return; }
+  const useOwn = $('useOwnKey').checked, ownKey = $('ownKey').value.trim();
+  if (useOwn && !ownKey) { alert('勾选了用自己的 Key，请填入或取消勾选。'); return; }
   $('startBtn').disabled = true;
-  const body = useOwn ? { api_key: ownKey } : {};
   const r = await fetch(api('/api/translate/' + JOB.job_id), {
-    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(useOwn ? {api_key: ownKey} : {})
   });
   if (!r.ok) { const e = await r.json(); alert('启动失败：'+(e.detail||r.status)); $('startBtn').disabled=false; return; }
   show('progCard', true);
   $('progCard').scrollIntoView({behavior:'smooth'});
-  pollTimer = setInterval(poll, 800);
+  pollTimer = setInterval(poll, 1000);
 });
 
 async function poll() {
-  const r = await fetch(api('/api/status/' + JOB.job_id));
-  const s = await r.json();
+  const s = await (await fetch(api('/api/status/' + JOB.job_id))).json();
   if (s.status === 'running') {
-    $('barFill').style.width = s.percent + '%';
-    $('progText').textContent = `已翻译 ${s.done} / ${s.total} 段（${s.percent}%）`;
+    const pct = Math.min(99, s.percent);  // 收尾前不显示100,避免误以为完成
+    $('barFill').style.width = pct + '%';
+    if (s.done >= s.total && s.total > 0) {
+      $('progText').textContent = '正在收尾（补翻残留、保存格式）…';
+    } else {
+      $('progText').textContent = `已翻译 ${s.done} / ${s.total}（${s.percent}%）`;
+    }
   } else if (s.status === 'done') {
     clearInterval(pollTimer);
-    $('barFill').style.width = '100%';
-    $('progText').textContent = '完成！';
+    $('barFill').style.width = '100%'; $('progText').textContent = '完成！';
     JOB = s; renderResult();
   } else if (s.status === 'error') {
     clearInterval(pollTimer);
-    $('progText').innerHTML = '<span class="err">翻译出错：' + (s.error||'') + '</span>';
+    $('progText').innerHTML = '<span class="err">出错：' + (s.error||'') + '</span>';
   }
 }
 
 function renderResult() {
   show('resultCard', true);
-  if (JOB.own_key) {
-    $('finalCost').innerHTML = `本次翻译消耗了约 <b>￥${JOB.cost}</b> 的 tokens（走你自己的 Key）。`;
-  } else {
-    $('finalCost').innerHTML = `本次翻译消耗了约 <b>￥${JOB.cost}</b> 的 tokens。`;
-  }
+  $('finalCost').innerHTML = `本次翻译消耗约 <b>￥${JOB.cost}</b>`
+    + (JOB.own_key ? '（走你自己的 Key）' : '');
   const resid = JOB.residual_zh;
   const residHtml = resid > 0
-    ? `<div class="stat"><div class="v err">${resid}</div><div class="l">残留中文段（多为中英混排原文）</div></div>`
+    ? `<div class="stat"><div class="v err">${resid}</div><div class="l">残留中文段</div></div>`
     : `<div class="stat"><div class="v ok">0</div><div class="l">无残留中文</div></div>`;
   $('finalStats').innerHTML = `
     <div class="stat"><div class="v">${fmt(JOB.in_chars)}</div><div class="l">输入字符</div></div>
@@ -247,39 +347,83 @@ function renderResult() {
     <div class="stat"><div class="v">${fmt(JOB.images)}</div><div class="l">图片保留</div></div>
     ${residHtml}`;
   $('resultCard').scrollIntoView({behavior:'smooth'});
+  showCostToast();
+  // 翻译完成自动下载译文(无需手动点;若浏览器拦截,可手动点"下载译文")
+  setTimeout(() => { window.location = api('/api/download/' + JOB.job_id); }, 600);
 }
 
-
 $('downloadBtn').addEventListener('click', () => { window.location = api('/api/download/' + JOB.job_id); });
-
 $('previewBtn').addEventListener('click', async () => {
-  const r = await fetch(api('/api/preview/' + JOB.job_id));
-  const d = await r.json();
+  const d = await (await fetch(api('/api/preview/' + JOB.job_id))).json();
   $('preview').innerHTML = d.paragraphs.map(p => '<p>' + escapeHtml(p) + '</p>').join('')
     + (d.total > d.paragraphs.length ? `<p class="muted">…仅预览前 ${d.paragraphs.length} 段，共 ${d.total} 段，完整内容请下载</p>` : '');
   show('preview', true);
 });
+$('resetBtn').addEventListener('click', () => location.reload());
 
-$('resetBtn').addEventListener('click', () => { location.reload(); });
-
-function escapeHtml(s){ return s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+// ---- 消耗 toast ----
+let toastTimer = null;
+function showCostToast() {
+  $('tIn').textContent = fmt(JOB.in_chars);
+  $('tOut').textContent = fmt(JOB.out_chars);
+  $('tCost').textContent = '￥' + JOB.cost;
+  $('toast').classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(hideToast, 8000);
+}
+function hideToast(){ $('toast').classList.remove('show'); clearTimeout(toastTimer); }
+$('toastX').addEventListener('click', e => { e.stopPropagation(); hideToast(); });
+document.addEventListener('click', e => {
+  const t = $('toast');
+  if (t.classList.contains('show') && !t.contains(e.target)) hideToast();
+});
 
 // ---- 术语表 ----
 async function loadGlossary() {
-  const r = await fetch(api('/api/glossary'));
-  const d = await r.json();
+  const d = await (await fetch(api('/api/glossary'))).json();
   GLOSS = d.items;
-  $('glossNote').textContent = `共 ${d.count} 条术语，另有 ${d.overrides_count} 条整句覆盖规则（人工修复的标准译文）。带红标的术语含「错译纠正」。`;
-  renderGloss('');
+  renderGloss();
 }
-function renderGloss(q) {
-  q = q.trim().toLowerCase();
-  const rows = GLOSS.filter(it => !q || it.zh.toLowerCase().includes(q) || it.en.toLowerCase().includes(q));
+function renderGloss() {
+  const q = $('glossSearch').value.trim().toLowerCase();
+  const rows = GLOSS.filter(it => it.genre === curGenre)
+    .filter(it => !q || it.zh.toLowerCase().includes(q) || it.en.toLowerCase().includes(q));
   $('glossBody').innerHTML = rows.map(it =>
-    `<tr><td>${escapeHtml(it.zh)}</td><td>${escapeHtml(it.en)}${it.wrongs && it.wrongs.length ? '<span class="tag">纠错</span>' : ''}</td></tr>`
+    `<tr><td>${escapeHtml(it.zh)}</td><td>${escapeHtml(it.en)}</td></tr>`
   ).join('') || '<tr><td colspan="2" class="muted">无匹配</td></tr>';
 }
-$('glossSearch').addEventListener('input', e => renderGloss(e.target.value));
+$('glossSearch').addEventListener('input', renderGloss);
+$('tabSci').addEventListener('click', () => switchTab('sci'));
+$('tabSiro').addEventListener('click', () => switchTab('siro'));
+function switchTab(g) {
+  curGenre = g;
+  $('tabSci').classList.toggle('active', g==='sci');
+  $('tabSiro').classList.toggle('active', g==='siro');
+  renderGloss();
+}
+
+// ---- 添加术语 ----
+$('addBtn').addEventListener('click', async () => {
+  const zh = $('addZh').value.trim(), en = $('addEn').value.trim();
+  const genre = $('addGenre').value, pw = $('addPw').value;
+  const msg = $('addMsg');
+  if (!zh || !en) { msg.innerHTML = '<span class="err">中文和英文都要填</span>'; return; }
+  $('addBtn').disabled = true; msg.textContent = '添加中…';
+  const r = await fetch(api('/api/glossary/add'), {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({zh, en, genre, password: pw})
+  });
+  $('addBtn').disabled = false;
+  if (r.ok) {
+    msg.innerHTML = `<span class="ok">已添加：${escapeHtml(zh)} → ${escapeHtml(en)}</span>`;
+    $('addZh').value = ''; $('addEn').value = '';
+    await loadGlossary();              // 自动刷新
+    switchTab(genre);                  // 切到添加的分类,立即可见
+  } else {
+    const e = await r.json();
+    msg.innerHTML = `<span class="err">${e.detail || '添加失败'}</span>`;
+  }
+});
+
 loadGlossary();
 </script>
 </body>

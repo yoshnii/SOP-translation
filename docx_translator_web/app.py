@@ -36,12 +36,13 @@ os.makedirs(DATA, exist_ok=True)
 GLOSSARY_PATH = os.path.join(BASE, "glossary.csv")
 OVERRIDES_PATH = os.path.join(BASE, "overrides.csv")
 
-MODEL = os.environ.get("ARK_MODEL", "doubao-seed-translation-250915")
+# 翻译引擎:DeepSeek V4-Pro(章节级,上下文消歧,质量最高)
+DS_MODEL = os.environ.get("DS_MODEL", "deepseek-v4-pro-260425")
+# DeepSeek V4-Pro 价格(火山方舟,元/百万 token)
+DS_PRICE_IN = 4.0
+DS_PRICE_OUT = 16.0
 
-# 豆包翻译模型价格(元/百万字符)
-PRICE_IN = 1.2
-PRICE_OUT = 3.6
-# 输出字符 ≈ 输入字符 × 该系数(中->英膨胀经验值)
+# 预估用:输出字符 ≈ 输入字符 × 该系数(中->英膨胀经验值)
 OUT_RATIO = 1.8
 
 # 内存任务表:job_id -> {status, done, total, ...}
@@ -64,20 +65,55 @@ app.add_middleware(
 # ----------------------------------------------------------------------------
 # 术语表 API
 # ----------------------------------------------------------------------------
+import csv as _csv
+
+# 添加术语的密码(改这里,或用环境变量 GLOSSARY_PASSWORD)
+GLOSSARY_PASSWORD = os.environ.get("GLOSSARY_PASSWORD", "bgi2026")
+
+
+def _read_glossary_rows():
+    """直接读 CSV,返回 [(zh, en, genre)],跳过注释/表头。"""
+    items = []
+    if not os.path.exists(GLOSSARY_PATH):
+        return items
+    for row in _csv.reader(open(GLOSSARY_PATH, newline="", encoding="utf-8")):
+        if not row or row[0].strip().startswith("#") or len(row) < 2:
+            continue
+        zh, en = row[0].strip(), row[1].strip()
+        if not (zh and en and zh != "中文"):
+            continue
+        genre = row[4].strip() if len(row) >= 5 and row[4].strip() else "sci"
+        items.append({"zh": zh, "en": en, "genre": genre})
+    return items
+
+
 @app.get("/api/glossary")
 def get_glossary():
-    """返回术语表(供前端只读展示)。"""
-    glossary = core.load_glossary(GLOSSARY_PATH)
-    overrides = core.load_overrides(OVERRIDES_PATH)
-    items = [
-        {"zh": zh, "en": en, "wrongs": wrongs}
-        for zh, en, wrongs in glossary
-    ]
-    return {
-        "count": len(items),
-        "items": items,
-        "overrides_count": len(overrides),
-    }
+    """返回术语表(含分类),供前端展示。"""
+    items = _read_glossary_rows()
+    return {"count": len(items), "items": items}
+
+
+@app.post("/api/glossary/add")
+def add_glossary(body: dict):
+    """添加一条术语(需密码)。body: {zh, en, genre, password}"""
+    if (body or {}).get("password", "") != GLOSSARY_PASSWORD:
+        raise HTTPException(403, "密码错误")
+    zh = (body.get("zh") or "").strip()
+    en = (body.get("en") or "").strip()
+    genre = (body.get("genre") or "sci").strip()
+    if not zh or not en:
+        raise HTTPException(400, "中文和英文都要填")
+    if genre not in ("sci", "siro"):
+        genre = "sci"
+    # 查重
+    for it in _read_glossary_rows():
+        if it["zh"] == zh:
+            raise HTTPException(400, f"术语「{zh}」已存在(译法:{it['en']})")
+    # 追加到 CSV(中文,英文,备注,错译,分类)
+    with open(GLOSSARY_PATH, "a", newline="", encoding="utf-8") as f:
+        _csv.writer(f).writerow([zh, en, "[网页添加]", "", genre])
+    return {"ok": True, "zh": zh, "en": en, "genre": genre}
 
 
 # ----------------------------------------------------------------------------
@@ -106,7 +142,10 @@ async def upload(file: UploadFile = File(...)):
     unique = list(dict.fromkeys(s.text for s in to_translate))
     in_chars = sum(len(re.sub(r"\s+", " ", t).strip()) for t in unique)
     out_chars = int(in_chars * OUT_RATIO)
-    cost = in_chars / 1e6 * PRICE_IN + out_chars / 1e6 * PRICE_OUT
+    # DeepSeek V4-Pro 预估费用(按 token)
+    _in_tok = int(in_chars * 0.7) + 1500 * max(1, len(unique) // 40)
+    _out_tok = int(out_chars * 0.35 * 2.5)
+    cost = _in_tok / 1e6 * DS_PRICE_IN + _out_tok / 1e6 * DS_PRICE_OUT
 
     with zipfile.ZipFile(in_path) as z:
         n_img = len([n for n in z.namelist()
@@ -161,51 +200,41 @@ def start_translate(job_id: str, body: dict = None):
 
 
 def _run_translation(job_id: str):
-    """后台线程:执行翻译并写回,更新进度。"""
+    """后台线程:用 DeepSeek 章节级引擎翻译,更新进度。"""
+    import deepseek_translator as ds
     job = JOBS[job_id]
     try:
-        api_key = job["api_key"]
-        glossary = core.load_glossary(GLOSSARY_PATH)
-        overrides = core.load_overrides(OVERRIDES_PATH)
-
-        doc = Document(job["in_path"])
-        segments = core.collect_segments(doc)
-        to_translate = [s for s in segments if not core.should_skip(s.text)]
-        unique = list(dict.fromkeys(s.text for s in to_translate))
+        os.environ["ARK_API_KEY"] = job["api_key"]  # 引擎从环境读 key
 
         def progress(done, total):
             job["done"] = done
             job["total"] = total
 
-        cache = core.translate_all(api_key, MODEL, unique, "en",
-                                   glossary, overrides, progress_cb=progress)
-
-        for seg in segments:
-            if core.should_skip(seg.text):
-                continue
-            core.write_back(seg, cache.get(seg.text, seg.text))
-
         out_path = os.path.join(job["dir"], "output_en.docx")
-        doc.save(out_path)
+        # DeepSeek 章节级翻译(全覆盖+保格式+术语注入+残留补翻),返回字符统计
+        stats = ds.translate_doc(
+            job["in_path"], out_path, DS_MODEL,
+            progress_cb=progress, glossary_path=GLOSSARY_PATH,
+            return_stats=True,
+        )
         job["out_path"] = out_path
 
-        # 实际字符数(用于最终结算)
-        real_in = sum(len(re.sub(r"\s+", " ", t).strip()) for t in unique)
-        real_out = sum(len(cache.get(t, "")) for t in unique)
-        cost = real_in / 1e6 * PRICE_IN + real_out / 1e6 * PRICE_OUT
-        job["in_chars"] = real_in
-        job["out_chars"] = real_out
-        job["cost"] = round(cost, 3)
-
-        # 残留中文统计(质量提示)
-        doc2 = Document(out_path)
-        left = sum(1 for s in core.collect_segments(doc2)
-                   if re.search(r"[一-鿿]", s.text) and not core.should_skip(s.text))
-        job["residual_zh"] = left
+        # 费用:DeepSeek 按 token(火山 V4-Pro 输入4/输出16 元每百万token)
+        in_chars = stats.get("in_chars", 0)
+        out_chars = stats.get("out_chars", 0)
+        in_tok = int(in_chars * 0.7) + 1500 * stats.get("chunks", 1)
+        out_tok = int(out_chars * 0.35 * 2.5)  # V4-Pro 推理输出偏多
+        cost = in_tok / 1e6 * DS_PRICE_IN + out_tok / 1e6 * DS_PRICE_OUT
+        job["in_chars"] = in_chars
+        job["out_chars"] = out_chars
+        job["cost"] = round(cost, 2)
+        job["residual_zh"] = stats.get("residual", 0)
         job["status"] = "done"
     except Exception as e:
+        import traceback
         job["status"] = "error"
         job["error"] = f"{type(e).__name__}: {e}"
+        print(traceback.format_exc())
 
 
 @app.get("/api/status/{job_id}")
