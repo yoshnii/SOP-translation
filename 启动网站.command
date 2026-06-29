@@ -19,6 +19,14 @@ if [ -z "$ARK_API_KEY" ]; then
   export ARK_API_KEY
 fi
 
+# 清掉可能占用 8000 端口的旧服务(避免"端口已占用"启动失败)
+OLD_PID=$(lsof -ti :8000 2>/dev/null)
+if [ -n "$OLD_PID" ]; then
+  echo "发现旧服务正在运行,先关闭它..."
+  kill $OLD_PID 2>/dev/null
+  sleep 2
+fi
+
 echo ""
 echo "=========================================="
 echo "  SOP 翻译网站已启动"
